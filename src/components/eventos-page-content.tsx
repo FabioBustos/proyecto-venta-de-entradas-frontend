@@ -9,7 +9,7 @@ import type { Evento, EventFiltersValues } from "@/types";
 
 interface EventosPageContentProps {
   initialEventos: Evento[];
-  initialPagination: {
+  initialPagination?: {
     page: number;
     limit: number;
     total: number;
@@ -46,8 +46,10 @@ export function EventosPageContent({
     };
   })();
 
-  const [eventos, setEventos] = useState(initialEventos);
-  const [pagination, setPagination] = useState(initialPagination);
+  const defaultPagination = { page: 1, limit: 9, total: 0, totalPages: 0 };
+  
+  const [eventos, setEventos] = useState(initialEventos || []);
+  const [pagination, setPagination] = useState(initialPagination || defaultPagination);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState<EventFiltersValues | null>(initialFilterValues);
 
