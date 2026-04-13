@@ -92,10 +92,13 @@ export function useCompras(token?: string) {
   });
 }
 
-export function useEntradas(token?: string) {
+export function useEntradas(token?: string, page = 1, limit = 10) {
   return useQuery({
-    queryKey: ['entradas', token],
-    queryFn: () => entradasApi.getAll(token) as Promise<any[]>,
+    queryKey: ['entradas', token, page, limit],
+    queryFn: () => 
+      fetch(`${API_BASE}/api/entradas?page=${page}&limit=${limit}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      }).then(r => handleResponse<{ data: any[]; pagination: Paginacion }>(r)),
     enabled: !!token,
   });
 }
@@ -115,6 +118,57 @@ export function useCreateCompra(token?: string) {
 export function useCreatePago(token?: string) {
   return useMutation({
     mutationFn: (data: any) => pagosApi.create(data, token),
+  });
+}
+
+export function useEvento(eventoId: string) {
+  return useQuery({
+    queryKey: ['evento', eventoId],
+    queryFn: () => 
+      fetch(`${API_BASE}/api/eventos/${eventoId}`).then(r => 
+        handleResponse<{ data: Evento }>(r).then(res => res.data)
+      ),
+    enabled: !!eventoId,
+  });
+}
+
+export function usePago(config?: {
+  token?: string;
+  onSuccess?: (data: any) => void;
+  onError?: (error: any) => void;
+}) {
+  return useMutation({
+    mutationFn: (data: any) => 
+      fetch(`${API_BASE}/api/pagos`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(config?.token ? { Authorization: `Bearer ${config.token}` } : {}),
+        },
+        body: JSON.stringify(data),
+      }).then(r => handleResponse<any>(r)),
+    onSuccess: config?.onSuccess,
+    onError: config?.onError,
+  });
+}
+
+export function useCompraGratuita(config?: {
+  token?: string;
+  onSuccess?: (data: any) => void;
+  onError?: (error: any) => void;
+}) {
+  return useMutation({
+    mutationFn: (data: any) => 
+      fetch(`${API_BASE}/api/compras/gratuita`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(config?.token ? { Authorization: `Bearer ${config.token}` } : {}),
+        },
+        body: JSON.stringify(data),
+      }).then(r => handleResponse<any>(r)),
+    onSuccess: config?.onSuccess,
+    onError: config?.onError,
   });
 }
 

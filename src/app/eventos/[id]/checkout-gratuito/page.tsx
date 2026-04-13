@@ -25,18 +25,18 @@ export default function CheckoutGratuitoPage() {
   const params = useParams();
   const router = useRouter();
   const rawEventoId = params?.id;
-  const eventoId = (rawEventoId && rawEventoId !== 'undefined') ? rawEventoId as string : null;
+  const eventoId = (rawEventoId && rawEventoId !== 'undefined') ? rawEventoId as string : undefined;
   const { isAuthenticated, token } = useAuthStore();
-  const { data: evento, isLoading, error } = useEvento(eventoId);
+  const { data: evento, isLoading, error } = useEvento(eventoId || '');
   const [cantidad, setCantidad] = useState(1);
   const [compraExitosa, setCompraExitosa] = useState(false);
   const [codigoCompra, setCodigoCompra] = useState<string | null>(null);
   const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
   const sesionId = searchParams?.get('sesion') || null;
 
-  const { iniciarCompraGratuita, isLoading: buying, error: compraError } = useCompraGratuita({
+  const { mutate: iniciarCompraGratuita, isPending: buying, error: compraError } = useCompraGratuita({
     token: token || undefined,
-    onSuccess: (compra) => {
+    onSuccess: (compra: any) => {
       setCompraExitosa(true);
       setCodigoCompra(compra.codigo);
     },
@@ -88,7 +88,7 @@ export default function CheckoutGratuitoPage() {
       router.push(`/login?returnUrl=/eventos/${eventoId}/checkout-gratuito`);
       return;
     }
-    iniciarCompraGratuita(eventoId, esSinLimite ? 1 : cantidad, sesionId || undefined);
+    iniciarCompraGratuita({ eventoId, cantidad: esSinLimite ? 1 : cantidad, sesionId: sesionId || undefined });
   };
 
   const formatFecha = (fecha: string | undefined) => {

@@ -8,11 +8,22 @@ export interface Evento {
   precio: number;
   categoria: string;
   imagen?: string;
+  imagenes?: string[];
   capacidad: number;
   entradasVendidas: number;
   activo: boolean;
   createdAt: string;
   updatedAt: string;
+  gratuito?: boolean;
+  entradaLiberada?: boolean;
+  gratuitoSinLimite?: boolean;
+  limitePorUsuario?: number;
+  espacio?: string;
+  direccion?: string;
+  esMultipleDias?: boolean;
+  dias?: Array<{ fecha: string; hora: string; sesiones?: any[] }>;
+  comuna?: string;
+  region?: string;
 }
 
 export interface FiltrosEventos {
@@ -50,4 +61,9 @@ export interface EventFiltersProps {
   totalEvents: number;
   onFiltersChange?: (filters: any) => void;
   initialValues?: Partial<EventFiltersValues>;
+}
+
+export interface ApiResponse<T = any> {
+  data: T;
+  message?: string;
 }

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { EventoCard } from "@/components/evento-card";
 import { EventosGridSkeleton } from "@/components/ui/eventos-grid-skeleton";
 import { EventFilters } from "@/components/event-filters";
-import type { Evento, EventFiltersValues, ApiResponse } from "@/types";
+import type { Evento, EventFiltersValues } from "@/types";
 
 const HeroSection = dynamic(() => import("@/components/hero-section").then(mod => mod.HeroSection), {
   loading: () => <div className="h-[400px] lg:h-[500px] bg-muted animate-pulse" />,
@@ -99,7 +99,7 @@ export function EventosClient() {
       try {
         const queryParams = buildQueryParams(page, filters);
         const response = await fetch(`/api/eventos?${queryParams}`);
-        const data: ApiResponse = await response.json();
+        const data = await response.json() as { data: Evento[]; pagination: { totalPages: number } };
 
         if (!data?.data) {
           console.error("Invalid API response:", data);

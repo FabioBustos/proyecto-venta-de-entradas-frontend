@@ -27,9 +27,9 @@ export default function CheckoutPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const rawEventoId = params?.id;
-  const eventoId = (rawEventoId && rawEventoId !== 'undefined') ? rawEventoId as string : null;
+  const eventoId = (rawEventoId && rawEventoId !== 'undefined') ? rawEventoId as string : undefined;
   const { isAuthenticated, user, token } = useAuthStore();
-  const { data: evento, isLoading, error } = useEvento(eventoId);
+  const { data: evento, isLoading, error } = useEvento(eventoId || '');
   const [sesiones, setSesiones] = useState<any[]>([]);
   const [cantidad, setCantidad] = useState(1);
   const [sesionId, setSesionId] = useState<string | null>(null);
@@ -39,9 +39,9 @@ export default function CheckoutPage() {
   const [puedeComprar, setPuedeComprar] = useState(true);
   const [ready, setReady] = useState(false);
 
-  const { iniciarPago, isLoading: buying, error: pagoError } = usePago({
+  const { mutate: iniciarPago, isPending: buying, error: pagoError } = usePago({
     token: token || undefined,
-    onError: (err) => {},
+    onError: (err: any) => {},
   });
 
   useEffect(() => {
@@ -154,7 +154,7 @@ export default function CheckoutPage() {
       alert(`Debes seleccionar entre 1 y ${maxCantidad} entrada(s). Tienes ${cantidad} seleccionada(s).`);
       return;
     }
-    iniciarPago({ ...evento, precio: precioUnitario, sesionId: sesionId || undefined, diaIndex: diaSeleccionada || undefined }, cantidad);
+    iniciarPago({ evento: { ...evento, precio: precioUnitario }, cantidad, sesionId: sesionId || undefined, diaIndex: diaSeleccionada || undefined });
   };
 
   const formatFecha = (fecha: string | undefined) => {

@@ -19,6 +19,19 @@ async function loginHandler(request: NextRequest) {
   return NextResponse.json(data, { status: response.status });
 }
 
+async function googleHandler(request: NextRequest) {
+  const response = await fetch(`${API_URL}/auth/google`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const data = await response.json();
+  
+  return NextResponse.json(data, { status: response.status });
+}
+
 async function forgotPasswordHandler(request: NextRequest) {
   const body = await request.json();
   
@@ -44,19 +57,6 @@ async function resetPasswordHandler(request: NextRequest) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(body),
-  });
-
-  const data = await response.json();
-  
-  return NextResponse.json(data, { status: response.status });
-}
-
-async function googleHandler(request: NextRequest) {
-  const response = await fetch(`${API_URL}/auth/google`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
   });
 
   const data = await response.json();
