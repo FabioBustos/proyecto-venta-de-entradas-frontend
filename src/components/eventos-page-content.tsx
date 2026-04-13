@@ -137,16 +137,16 @@ export function EventosPageContent({
     setFilters(newFilters);
   }, []);
 
-  const hasMore = pagination.page < pagination.totalPages;
+  const hasMore = pagination?.page < pagination?.totalPages;
 
   const loadMore = async () => {
     if (loading || !hasMore || !filters) return;
-    fetchEventos(filters, pagination.page + 1);
+    fetchEventos(filters, (pagination?.page || 1) + 1);
   };
 
   return (
     <>
-      <EventFilters totalEvents={pagination.total} onFiltersChange={handleFiltersChange} initialValues={initialFilterValues} />
+      <EventFilters totalEvents={pagination?.total || 0} onFiltersChange={handleFiltersChange} initialValues={initialFilterValues} />
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mt-8">
         {eventos.map((evento, index) => (
