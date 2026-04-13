@@ -35,3 +35,19 @@ export interface ResponsePaginada<T> {
   data: T[];
   pagination: Paginacion;
 }
+
+export interface EventFiltersValues {
+  searchQuery: string;
+  selectedCategory: string;
+  selectedCity: string;
+  selectedComuna: string;
+  selectedFecha: string;
+  priceRange: [number, number];
+  sortBy: string;
+}
+
+export interface EventFiltersProps {
+  totalEvents: number;
+  onFiltersChange?: (filters: any) => void;
+  initialValues?: Partial<EventFiltersValues>;
+}

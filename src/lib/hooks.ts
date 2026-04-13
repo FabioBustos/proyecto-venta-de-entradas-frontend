@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import type { FiltrosEventos, ResponsePaginada, Evento } from '@/types';
 
@@ -115,4 +116,79 @@ export function useCreatePago(token?: string) {
   return useMutation({
     mutationFn: (data: any) => pagosApi.create(data, token),
   });
+}
+
+export function useEventFilters(initialValues?: Partial<{
+  searchQuery: string;
+  selectedCategory: string;
+  selectedCity: string;
+  selectedComuna: string;
+  selectedFecha: string;
+  priceRange: [number, number];
+  sortBy: string;
+}>) {
+  const [searchQuery, setSearchQuery] = useState(initialValues?.searchQuery || "");
+  const [selectedCategory, setSelectedCategory] = useState(initialValues?.selectedCategory || "todos");
+  const [selectedCity, setSelectedCity] = useState(initialValues?.selectedCity || "todas");
+  const [selectedComuna, setSelectedComuna] = useState(initialValues?.selectedComuna || "todas");
+  const [selectedFecha, setSelectedFecha] = useState(initialValues?.selectedFecha || "todas");
+  const [priceRange, setPriceRange] = useState<[number, number]>(initialValues?.priceRange || [0, 5000]);
+  const [sortBy, setSortBy] = useState(initialValues?.sortBy || "fecha");
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [isPriceOpen, setIsPriceOpen] = useState(false);
+  const [isLocationOpen, setIsLocationOpen] = useState(false);
+  const [isDateOpen, setIsDateOpen] = useState(false);
+
+  const activeFiltersCount = 
+    (selectedCategory !== "todos" ? 1 : 0) +
+    (selectedCity !== "todas" ? 1 : 0) +
+    (selectedComuna !== "todas" ? 1 : 0) +
+    (selectedFecha !== "todas" ? 1 : 0) +
+    (priceRange[0] > 0 || priceRange[1] < 5000 ? 1 : 0);
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setSelectedCategory("todos");
+    setSelectedCity("todas");
+    setSelectedComuna("todas");
+    setSelectedFecha("todas");
+    setPriceRange([0, 5000]);
+    setSortBy("fecha");
+  };
+
+  const formatPrice = (value: number) => {
+    return new Intl.NumberFormat("es-CL", {
+      style: "currency",
+      currency: "CLP",
+      minimumFractionDigits: 0,
+    }).format(value);
+  };
+
+  return {
+    searchQuery,
+    selectedCategory,
+    selectedCity,
+    selectedComuna,
+    selectedFecha,
+    priceRange,
+    sortBy,
+    activeFiltersCount,
+    isFiltersOpen,
+    isPriceOpen,
+    isLocationOpen,
+    isDateOpen,
+    setSearchQuery,
+    setSelectedCategory,
+    setSelectedCity,
+    setSelectedComuna,
+    setSelectedFecha,
+    setPriceRange,
+    setSortBy,
+    setIsFiltersOpen,
+    setIsPriceOpen,
+    setIsLocationOpen,
+    setIsDateOpen,
+    clearFilters,
+    formatPrice,
+  };
 }
