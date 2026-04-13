@@ -51,6 +51,19 @@ async function resetPasswordHandler(request: NextRequest) {
   return NextResponse.json(data, { status: response.status });
 }
 
+async function googleHandler(request: NextRequest) {
+  const response = await fetch(`${API_URL}/auth/google`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const data = await response.json();
+  
+  return NextResponse.json(data, { status: response.status });
+}
+
 export async function POST(request: NextRequest) {
   const url = new URL(request.url);
   const action = url.searchParams.get('action');
@@ -64,4 +77,8 @@ export async function POST(request: NextRequest) {
   }
 
   return withLogging(loginHandler, request);
+}
+
+export async function GET(request: NextRequest) {
+  return withLogging(googleHandler, request);
 }
