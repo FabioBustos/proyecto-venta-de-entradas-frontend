@@ -49,7 +49,7 @@ export function EventoCard({ evento, priority = false }: EventoCardProps) {
   hoy.setHours(0, 0, 0, 0);
 
   const fechasFuturas = (() => {
-    if (evento.esMultipleDias && evento.dias?.length > 0) {
+    if (evento.esMultipleDias && evento.dias && evento.dias.length > 0) {
       return evento.dias
         .map((dia: any) => parseFecha(dia.fecha))
         .filter(d => d >= hoy)

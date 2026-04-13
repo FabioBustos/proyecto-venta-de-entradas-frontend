@@ -9,7 +9,7 @@ export const metadata = {
 };
 
 export default async function EventosPage() {
-  const { data: eventos, pagination } = await fetchEventosServer({}, 1, 9);
+  const { data: eventos = [], pagination } = await fetchEventosServer({}, 1, 9);
   const eventosActivos = eventos.filter((evento) => evento.activo);
   const featuredEvents = eventosActivos.slice(0, 3);
 
