@@ -7,12 +7,6 @@ import { HeroSection } from "@/components/hero-section";
 import { EventFilters } from "@/components/event-filters";
 import { mockEventos } from "@/lib/mock-eventos";
 
-export const metadata = {
-  title: "Eventos | Descubre los mejores eventos",
-  description:
-    "Explora nuestra seleccion de eventos de musica, tecnologia, arte, deportes y mas.",
-};
-
 const ITEMS_PER_PAGE = 9;
 
 export default function EventosPage() {
